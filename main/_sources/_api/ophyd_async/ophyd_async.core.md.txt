@@ -507,6 +507,14 @@
   - ```{autodoc2-docstring} ophyd_async.core._command.soft_command
     :summary:
     ```
+* - {py:obj}`generate_directory_uri <ophyd_async.core._path_providers.generate_directory_uri>`
+  - ```{autodoc2-docstring} ophyd_async.core._path_providers.generate_directory_uri
+    :summary:
+    ```
+* - {py:obj}`normalize_path <ophyd_async.core._path_providers.normalize_path>`
+  - ```{autodoc2-docstring} ophyd_async.core._path_providers.normalize_path
+    :summary:
+    ```
 ````
 
 ### Data
@@ -1114,7 +1122,7 @@ Bases: {py:obj}`typing.Protocol`\[{py:obj}`bluesky.protocols.T_co`\]
 ```{autodoc2-docstring} ophyd_async.core._protocol.AsyncMovable
 ```
 
-````{py:method} set(value: ~bluesky.protocols.T_co) -> ~ophyd_async.core._status.AsyncStatus
+````{py:method} set(value: ~bluesky.protocols.T_co) -> ~ophyd_async.core._status.AsyncStatusBase
 :canonical: ophyd_async.core._protocol.AsyncMovable.set
 :abstractmethod:
 
@@ -1163,7 +1171,7 @@ Bases: {py:obj}`typing.Protocol`
 ```{autodoc2-docstring} ophyd_async.core._protocol.AsyncStageable
 ```
 
-````{py:method} stage() -> ~ophyd_async.core._status.AsyncStatus
+````{py:method} stage() -> ~ophyd_async.core._status.AsyncStatusBase
 :canonical: ophyd_async.core._protocol.AsyncStageable.stage
 :abstractmethod:
 
@@ -1172,7 +1180,7 @@ Bases: {py:obj}`typing.Protocol`
 
 ````
 
-````{py:method} unstage() -> ~ophyd_async.core._status.AsyncStatus
+````{py:method} unstage() -> ~ophyd_async.core._status.AsyncStatusBase
 :canonical: ophyd_async.core._protocol.AsyncStageable.unstage
 :abstractmethod:
 
@@ -1193,15 +1201,15 @@ Bases: {py:obj}`typing.Protocol`, {py:obj}`typing.Generic`\[{py:obj}`ophyd_async
 
 ````
 
-`````{py:class} AsyncStatus(awaitable: ~collections.abc.Coroutine | ~asyncio.Task, name: str | None = None)
+`````{py:class} AsyncStatus(awaitable: ~collections.abc.Coroutine[~typing.Any, ~typing.Any, ~ophyd_async.core._utils.T] | ~asyncio.Task[~ophyd_async.core._utils.T], name: str | None = None)
 :canonical: ophyd_async.core._status.AsyncStatus
 
-Bases: {py:obj}`ophyd_async.core._status.AsyncStatusBase`
+Bases: {py:obj}`ophyd_async.core._status.AsyncStatusBase`\[{py:obj}`ophyd_async.core._utils.T`\]
 
 ```{autodoc2-docstring} ophyd_async.core._status.AsyncStatus
 ```
 
-````{py:method} wrap(f: ~collections.abc.Callable[~ophyd_async.core._utils.P, ~collections.abc.Coroutine]) -> ~collections.abc.Callable[~ophyd_async.core._utils.P, ~ophyd_async.core._status.AsyncStatus]
+````{py:method} wrap(f: ~collections.abc.Callable[~ophyd_async.core._utils.P, ~collections.abc.Coroutine[~typing.Any, ~typing.Any, ~ophyd_async.core._utils.V]]) -> ~collections.abc.Callable[~ophyd_async.core._utils.P, ~ophyd_async.core._status.AsyncStatus[~ophyd_async.core._utils.V]]
 :canonical: ophyd_async.core._status.AsyncStatus.wrap
 :classmethod:
 
@@ -1215,12 +1223,12 @@ Bases: {py:obj}`ophyd_async.core._status.AsyncStatusBase`
 `````{py:class} WatchableAsyncStatus(iterator: ~collections.abc.AsyncIterator[~ophyd_async.core._utils.WatcherUpdate[~ophyd_async.core._utils.T]], name: str | None = None)
 :canonical: ophyd_async.core._status.WatchableAsyncStatus
 
-Bases: {py:obj}`ophyd_async.core._status.AsyncStatusBase`, {py:obj}`typing.Generic`\[{py:obj}`ophyd_async.core._utils.T`\]
+Bases: {py:obj}`ophyd_async.core._status.AsyncStatusBase`\[{py:obj}`None`\], {py:obj}`typing.Generic`\[{py:obj}`ophyd_async.core._utils.T`\]
 
 ```{autodoc2-docstring} ophyd_async.core._status.WatchableAsyncStatus
 ```
 
-````{py:method} watch(watcher: ~ophyd_async.core._protocol.Watcher)
+````{py:method} watch(watcher: ~ophyd_async.core._protocol.Watcher[~ophyd_async.core._utils.T])
 :canonical: ophyd_async.core._status.WatchableAsyncStatus.watch
 
 ```{autodoc2-docstring} ophyd_async.core._status.WatchableAsyncStatus.watch
@@ -1228,7 +1236,7 @@ Bases: {py:obj}`ophyd_async.core._status.AsyncStatusBase`, {py:obj}`typing.Gener
 
 ````
 
-````{py:method} wrap(f: ~collections.abc.Callable[~ophyd_async.core._utils.P, ~collections.abc.AsyncIterator[~ophyd_async.core._utils.WatcherUpdate[~ophyd_async.core._utils.T]]]) -> ~collections.abc.Callable[~ophyd_async.core._utils.P, ~ophyd_async.core._status.WatchableAsyncStatus[~ophyd_async.core._utils.T]]
+````{py:method} wrap(f: ~collections.abc.Callable[~ophyd_async.core._utils.P, ~collections.abc.AsyncIterator[~ophyd_async.core._utils.WatcherUpdate[~ophyd_async.core._utils.V]]]) -> ~collections.abc.Callable[~ophyd_async.core._utils.P, ~ophyd_async.core._status.WatchableAsyncStatus[~ophyd_async.core._utils.V]]
 :canonical: ophyd_async.core._status.WatchableAsyncStatus.wrap
 :classmethod:
 
@@ -2961,7 +2969,7 @@ Bases: {py:obj}`typing.Protocol`
 
 ````
 
-````{py:class} StaticPathProvider(filename_provider: ~ophyd_async.core._path_providers.FilenameProvider, directory_path: ~pathlib.PurePath, directory_uri: str | None = None, create_dir_depth: int = 0)
+````{py:class} StaticPathProvider(filename_provider: ~ophyd_async.core._path_providers.FilenameProvider, directory_path: ~pathlib.PurePath | str, directory_uri: str | None = None, create_dir_depth: int = 0)
 :canonical: ophyd_async.core._path_providers.StaticPathProvider
 
 Bases: {py:obj}`ophyd_async.core._path_providers.PathProvider`
@@ -2971,7 +2979,7 @@ Bases: {py:obj}`ophyd_async.core._path_providers.PathProvider`
 
 ````
 
-````{py:class} AutoIncrementingPathProvider(filename_provider: ~ophyd_async.core._path_providers.FilenameProvider, base_directory_path: ~pathlib.PurePath, base_directory_uri: str | None = None, create_dir_depth: int = 0, max_digits: int = 5, starting_value: int = 0, num_calls_per_inc: int = 1, increment: int = 1, inc_delimeter: str = '_', base_name: str | None = None)
+````{py:class} AutoIncrementingPathProvider(filename_provider: ~ophyd_async.core._path_providers.FilenameProvider, base_directory_path: ~pathlib.PurePath | str, base_directory_uri: str | None = None, create_dir_depth: int = 0, max_digits: int = 5, starting_value: int = 0, num_calls_per_inc: int = 1, increment: int = 1, inc_delimeter: str = '_', base_name: str | None = None)
 :canonical: ophyd_async.core._path_providers.AutoIncrementingPathProvider
 
 Bases: {py:obj}`ophyd_async.core._path_providers.PathProvider`
@@ -2981,7 +2989,7 @@ Bases: {py:obj}`ophyd_async.core._path_providers.PathProvider`
 
 ````
 
-````{py:class} YMDPathProvider(filename_provider: ~ophyd_async.core._path_providers.FilenameProvider, base_directory_path: ~pathlib.PurePath, base_directory_uri: str | None = None, create_dir_depth: int = -3, datakey_name_as_base_dir: bool = False)
+````{py:class} YMDPathProvider(filename_provider: ~ophyd_async.core._path_providers.FilenameProvider, base_directory_path: ~pathlib.PurePath | str, base_directory_uri: str | None = None, create_dir_depth: int = -3, datakey_name_as_base_dir: bool = False)
 :canonical: ophyd_async.core._path_providers.YMDPathProvider
 
 Bases: {py:obj}`ophyd_async.core._path_providers.PathProvider`
@@ -3729,21 +3737,21 @@ Bases: {py:obj}`typing.Generic`\[{py:obj}`ophyd_async.core._utils.T`\]
 ```
 ````
 
-````{py:function} derived_signal_r(raw_to_derived: ~collections.abc.Callable[..., ~ophyd_async.core._signal_backend.SignalDatatypeT], derived_units: str | None = None, derived_precision: int | None = None, **raw_devices_and_constants: ~ophyd_async.core._device.Device | ~ophyd_async.core._signal_backend.Primitive) -> ~ophyd_async.core._signal.SignalR[~ophyd_async.core._signal_backend.SignalDatatypeT]
+````{py:function} derived_signal_r(raw_to_derived: ~collections.abc.Callable[..., ~ophyd_async.core._signal_backend.SignalDatatypeT], derived_units: str | None = None, derived_precision: int | None = None, derived_datatype: type[~ophyd_async.core._signal_backend.SignalDatatypeT] | None = None, **raw_devices_and_constants: ~ophyd_async.core._device.Device | ~ophyd_async.core._signal_backend.Primitive) -> ~ophyd_async.core._signal.SignalR[~ophyd_async.core._signal_backend.SignalDatatypeT]
 :canonical: ophyd_async.core._derived_signal.derived_signal_r
 
 ```{autodoc2-docstring} ophyd_async.core._derived_signal.derived_signal_r
 ```
 ````
 
-````{py:function} derived_signal_rw(raw_to_derived: ~collections.abc.Callable[..., ~ophyd_async.core._signal_backend.SignalDatatypeT], set_derived: ~collections.abc.Callable[[~ophyd_async.core._signal_backend.SignalDatatypeT], ~collections.abc.Awaitable[None]], derived_units: str | None = None, derived_precision: int | None = None, **raw_devices_and_constants: ~ophyd_async.core._device.Device | ~ophyd_async.core._signal_backend.Primitive) -> ~ophyd_async.core._signal.SignalRW[~ophyd_async.core._signal_backend.SignalDatatypeT]
+````{py:function} derived_signal_rw(raw_to_derived: ~collections.abc.Callable[..., ~ophyd_async.core._signal_backend.SignalDatatypeT], set_derived: ~collections.abc.Callable[[~ophyd_async.core._signal_backend.SignalDatatypeT], ~collections.abc.Awaitable[None]], derived_units: str | None = None, derived_precision: int | None = None, derived_datatype: type[~ophyd_async.core._signal_backend.SignalDatatypeT] | None = None, **raw_devices_and_constants: ~ophyd_async.core._device.Device | ~ophyd_async.core._signal_backend.Primitive) -> ~ophyd_async.core._signal.SignalRW[~ophyd_async.core._signal_backend.SignalDatatypeT]
 :canonical: ophyd_async.core._derived_signal.derived_signal_rw
 
 ```{autodoc2-docstring} ophyd_async.core._derived_signal.derived_signal_rw
 ```
 ````
 
-````{py:function} derived_signal_w(set_derived: ~collections.abc.Callable[[~ophyd_async.core._signal_backend.SignalDatatypeT], ~collections.abc.Awaitable[None]], derived_units: str | None = None, derived_precision: int | None = None) -> ~ophyd_async.core._signal.SignalW[~ophyd_async.core._signal_backend.SignalDatatypeT]
+````{py:function} derived_signal_w(set_derived: ~collections.abc.Callable[[~ophyd_async.core._signal_backend.SignalDatatypeT], ~collections.abc.Awaitable[None]], derived_units: str | None = None, derived_precision: int | None = None, derived_datatype: type[~ophyd_async.core._signal_backend.SignalDatatypeT] | None = None) -> ~ophyd_async.core._signal.SignalW[~ophyd_async.core._signal_backend.SignalDatatypeT]
 :canonical: ophyd_async.core._derived_signal.derived_signal_w
 
 ```{autodoc2-docstring} ophyd_async.core._derived_signal.derived_signal_w
@@ -4222,3 +4230,17 @@ Bases: {py:obj}`ophyd_async.core._command.Command`\[\[\]\, {py:obj}`None`\]
 ````
 
 `````
+
+````{py:function} generate_directory_uri(directory_path: ~pathlib.PurePath) -> str
+:canonical: ophyd_async.core._path_providers.generate_directory_uri
+
+```{autodoc2-docstring} ophyd_async.core._path_providers.generate_directory_uri
+```
+````
+
+````{py:function} normalize_path(path: ~pathlib.PurePath | str) -> ~pathlib.PurePath
+:canonical: ophyd_async.core._path_providers.normalize_path
+
+```{autodoc2-docstring} ophyd_async.core._path_providers.normalize_path
+```
+````
